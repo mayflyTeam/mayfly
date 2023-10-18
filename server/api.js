@@ -1,15 +1,17 @@
 import express from 'express';
 import cors from 'cors';
-import { getUrl } from './src/services/backendSpinUp.js';
+import router from './src/routes/router.js'
 
 
 const app = express();
 app.use(cors());
 
-const retrieveUrl = async () => {
-  const url = await getUrl()
-  console.log(url)
-}
 
-retrieveUrl()
+app.use("/", router)
+
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log('Port running on', PORT);
+});
 
