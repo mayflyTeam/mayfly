@@ -35,12 +35,12 @@ export const getUrl = async (service) => {
           });
           // console.log('Docker run executed successfully.');
           // console.log('Standard Output:', stdout);
-
+          
           const backendId = stdout.split('Backend ID: ')[1];
           // console.log('Standard Error:', stderr);
 
           const url = `http://localhost:8080/_plane_backend=${backendId}/`
-          const output = backendId ? url : "error from Plane drone";
+          const output = backendId ? {backendId, url, error: false} : {error: "error from Plane drone"};
           resolve(output);
         } catch (error) {
           reject(error);
