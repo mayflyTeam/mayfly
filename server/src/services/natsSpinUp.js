@@ -17,6 +17,7 @@ export const getUrlFromNats = async () => {
   const reply = await nc.request('cluster.plane_test.schedule', message, {max: 1});
   const data = JSON.parse(reply.data);
   console.log('response data:', data)
+  // url will need to change to backend_id.cluster_name once we can use domains
   const url = `http://localhost:8080/_plane_backend=${data.Scheduled.backend_id}/`
   return url;
 

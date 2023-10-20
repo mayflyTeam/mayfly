@@ -14,20 +14,6 @@ const router = express.Router();
 router.get('/nats', async (req, res) => {
   const response = await getUrlFromNats();
   res.send(response);
-  // const message = JSON.stringify({
-  //   cluster: "plane.test",
-  //   max_idle_secs: 30,
-  //   metadata: {},
-  //   executable: {
-  //       image: "ghcr.io/drifting-in-space/demo-image-drop-four",
-  //       env: {},
-  //   }
-  // });
-
-  // // Publish to NATS
-  // nc.publish('cluster.plane_test.schedule', message);
-
-  // res.send('Published message');
 })
 
 router.get("/services/:service", async (req, res) => {
