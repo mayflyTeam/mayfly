@@ -8,22 +8,9 @@ const nc = await nats.connect({
 
 nc.subscribe("cluster.*.schedule", {
   callback: (err, msg) => {
-    console.log(err, msg)
+    console.log('Error: ', err)
+    console.log('Message: ', msg)
   }
 })
-
-console.log('hello world')
-
-const message = {
-  cluster: "plane.test",
-  max_idle_secs: 30,
-  metadata: {},
-  executable: {
-      image: "ghcr.io/drifting-in-space/demo-image-drop-four",
-      env: {},
-  }
-}
-
-nc.publish('cluster.plane_test.schedule', message);
 
 export default nc
