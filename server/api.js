@@ -5,6 +5,7 @@ import router from './src/routes/router.js'
 
 const app = express();
 app.use(cors());
+app.use(express.static('build'))
 
 
 app.use("/", router)
