@@ -18,7 +18,6 @@ services:
     networks:
       - plane
 
-
   controller:
     container_name: plane-controller
     image: plane/controller:latest
@@ -32,6 +31,8 @@ services:
     networks:
       plane:
         ipv4_address: 172.16.238.11
+    depends_on:
+      - nats
 
   nats:
     container_name: plane-nats
@@ -48,6 +49,8 @@ services:
     image: ghcr.io/drifting-in-space/ip-api:latest
     networks:
       - plane
+    depends_on:
+      - drone
 
 networks:
   plane:
