@@ -3,12 +3,9 @@ import logoNoText from "../src/assets/modernLogo.png"
 import githubLogo from "../src/assets/githubLogo.png"
 
 import { useEffect, useState } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-const NavHome: React.FC = () => {
+const NavHome = () => {
   return (
         
         <nav className="flex font-amatic text-2xl bg-white w-screen h-24 items-center text-red-900 justify-between border-b-4 border-b-gray-900">
@@ -23,7 +20,7 @@ const NavHome: React.FC = () => {
   )
 }
 
-const AnimatedText: React.FC = () => {
+const AnimatedText = () => {
   const words = ['high compute', 'collaborative', 'gaming'];
   const [currentWord, setCurrentWord] = useState(words[0]);
 
@@ -42,7 +39,7 @@ const AnimatedText: React.FC = () => {
   )
 }
 
-const MayflyTitle: React.FC = () => {
+const MayflyTitle = () => {
   return (
     <div className="relative text-center text-red-900 text-center items-center mt-24">
       <img src={logoNoText} className="h-60 w-60 ml-auto opacity-25 relative" />
@@ -54,7 +51,7 @@ const MayflyTitle: React.FC = () => {
   )
 }
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
     <div className="flex justify-center text-center bg-white h-screen">
       <div className="flex-container">

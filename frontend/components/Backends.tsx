@@ -1,13 +1,7 @@
-import { useState, useEffect } from 'react'
-import arrow from "../src/assets/downArrow.png"
+import { useState, useEffect, MouseEvent } from 'react'
 import logoNoText from "../src/assets/transparentLogoNoText.png"
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link,
-  useParams
-} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import Sidebar from './Sidebar'
 
 interface BackendInfo {
   url: string,
@@ -23,7 +17,7 @@ const convertDate = (date: string): string => {
   return localDateString.replace(",", "")
 }
 
-const BackendTableRow: React.FC = ({backend, idx}: {backend: BackendInfo, idx: number}) => {
+const BackendTableRow = ({backend, idx}: {backend: BackendInfo, idx: number}) => {
   const buttonNotPresent = backend.squishedAt ? convertDate(backend.squishedAt) : <SquishButton />
   const launchText: string = String(backend.launchSuccess) === "true" ? "success" : "Loading..."
   return (
@@ -36,7 +30,7 @@ const BackendTableRow: React.FC = ({backend, idx}: {backend: BackendInfo, idx: n
   )
 }
 
-const BackendList: React.FC = ({list}: {list: BackendInfo[]}) => {
+const BackendList = ({list}: {list: BackendInfo[]}) => {
   if (list.length === 0) {
     return <p className="m-auto mt-0 p-5 bg-white rounded-xl shadow-2xl">You haven't hatched any backends yet...</p>
   }
@@ -70,8 +64,8 @@ const BackendList: React.FC = ({list}: {list: BackendInfo[]}) => {
 }
 
 
-const HatchButton: React.FC = ({handleClick, handleLoad, load}: {handleClick: Function, handleLoad: Function, load: boolean}) => {
-  const hatchService = (e) => {
+const HatchButton = ({handleClick, handleLoad, load}: {handleClick: Function, handleLoad: Function, load: boolean}) => {
+  const hatchService: React.MouseEventHandler<HTMLButtonElement> = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     handleClick()
     handleLoad()
@@ -105,7 +99,7 @@ const Loading = ({loadingState}: {loadingState: boolean}) => {
   )
 }
 
-const Modal: React.FC = () => {
+const Modal = () => {
   return (
   <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
   <div className="bg-gray-300 p-8 rounded-lg shadow-lg text-center">
@@ -127,28 +121,27 @@ const Modal: React.FC = () => {
   )
 }
 
- const BackendPage: React.FC = () => {
+ const BackendPage = () => {
   const user: string = '1';
   const service: string = useParams()['service'] || '';
-  const [load, setLoad] = useState(false)
-
-  const [backends, setBackends] = useState<Array<BackendInfo>>([])
-  const serviceName: string = useParams()['service'] || ""
-
-  const getBackends = async () => {
-    const { data } = await axios.get(`http://localhost:3000/1/services/${serviceName}`)
-    setBackends(data);
-  }
-
-  useEffect(() => {
-    getBackends()
-  }, [])
-  
   const [loading, isLoading] = useState(false)
 
   const changeLoadState = () => {
     isLoading(true)
   }
+
+  const [backends, setBackends] = useState<Array<BackendInfo>>([])
+  const serviceName: string = useParams()['service'] || ""
+
+  useEffect(() => {
+    const getBackends = async () => {
+      const { data } = await axios.get(`http://localhost:3000/1/services/${serviceName}`)
+      setBackends(data);
+    }
+    getBackends()
+  }, [serviceName])
+  
+
 
   const getUrl = () => {
     axios.get(`http://localhost:3000/${user}/services/${service}/hatch`)
@@ -166,7 +159,7 @@ const Modal: React.FC = () => {
       isLoading(false)
     
     })
-    .catch(error => {
+    .catch(() => {
       //when the call to the api fails
       console.log('hatch call from frontend fail')
     })
@@ -181,7 +174,7 @@ const Modal: React.FC = () => {
      
       <div className="h-auto flex items-center justify-center bg-slate-800">
       <p className='flex ml-auto font-josefin text-white text-5xl align-center'>{serviceName}</p>
-        <HatchButton handleClick={getUrl} handleLoad={changeLoadState} load={load}  />
+        <HatchButton handleClick={getUrl} handleLoad={changeLoadState} load={loading}  />
       </div>
       <div className={backendClass}>
         <BackendList list={backends} />

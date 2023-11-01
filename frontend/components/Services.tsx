@@ -1,10 +1,5 @@
-import Sidebar from './Sidebar'
 import { useState, useEffect} from 'react'
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link,
-  useParams
-} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -13,7 +8,7 @@ interface ServiceObject {
   name: string
 }
 
-const Service: React.FC = ({service}: {service: ServiceObject}) => {
+const Service = ({service}: {service: ServiceObject}) => {
   const serviceName: string = service.name
   return (
     <Link to={`/services/${serviceName}`}>
@@ -24,7 +19,7 @@ const Service: React.FC = ({service}: {service: ServiceObject}) => {
   )
 }
 
-const ServiceList: React.FC = ({services}: {services: ServiceObject[]}) => {
+const ServiceList = ({services}: {services: ServiceObject[]}) => {
   
   const list = services.map(service => <Service key={uuidv4()} service={service} />)
   return (
@@ -34,7 +29,7 @@ const ServiceList: React.FC = ({services}: {services: ServiceObject[]}) => {
   )
 }
 
-const TableCard: React.FC = () => {
+const TableCard = () => {
 
   const [services, setServices] = useState<Array<ServiceObject>>([]);
 
@@ -56,7 +51,7 @@ const TableCard: React.FC = () => {
   )
 }
 
-const ServicesPage: React.FC = () => {
+const ServicesPage = () => {
   return (
     <div className="flex justify-center text-center bg-slate-800 h-screen">
       <TableCard />

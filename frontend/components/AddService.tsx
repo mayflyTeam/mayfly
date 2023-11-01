@@ -1,8 +1,8 @@
-import Sidebar from './Sidebar'
 import axios from 'axios'
+import { MouseEvent } from 'react';
 
 const Form = () => {
-  const submitForm = (e) => {
+  const submitForm: React.MouseEventHandler<HTMLButtonElement> = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault;
     // make axios post call
     try {
