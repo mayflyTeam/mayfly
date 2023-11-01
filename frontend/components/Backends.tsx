@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import arrow from "../src/assets/downArrow.png"
+import logoNoText from "../src/assets/transparentLogoNoText.png"
 import {
   BrowserRouter as Router,
   Routes, Route, Link,
@@ -22,20 +23,20 @@ const convertDate = (date: string): string => {
   return localDateString.replace(",", "")
 }
 
-const BackendTableRow = ({backend, idx}: {backend: BackendInfo, idx: number}) => {
+const BackendTableRow: React.FC = ({backend, idx}: {backend: BackendInfo, idx: number}) => {
   const buttonNotPresent = backend.squishedAt ? convertDate(backend.squishedAt) : <SquishButton />
-  const launchText: string = String(backend.launchSuccess) === "true" ? "success" : "failure"
+  const launchText: string = String(backend.launchSuccess) === "true" ? "success" : "Loading..."
   return (
     <tr className="text-sm">
       <td className="p-5 underline"><a className="hover:text-red-500"href={backend.url}>backend {idx}</a></td>
-      <td className="p-5">{String(launchText)}</td>
+      <td className="p-5">{launchText}</td>
       <td className="p-5">{convertDate(backend.hatchedAt)}</td>
       <td className="p-5">{buttonNotPresent}</td>
     </tr>
   )
 }
 
-const BackendList = ({list}: {list: BackendInfo[]}) => {
+const BackendList: React.FC = ({list}: {list: BackendInfo[]}) => {
   if (list.length === 0) {
     return <p className="m-auto mt-0 p-5 bg-white rounded-xl shadow-2xl">You haven't hatched any backends yet...</p>
   }
@@ -49,7 +50,7 @@ const BackendList = ({list}: {list: BackendInfo[]}) => {
   return (
     <>
           {/* <div className="flex items-center bg-slate-800 h-screen table-auto overflow-auto"> */}
-      <div className="m-auto mt-1 p-5 bg-white rounded-xl shadow-2xl table-auto">
+      <div className="m-auto mt-1 p-5 font-josefin bg-white rounded-xl shadow-2xl table-auto">
         <table>
           <thead className="border-b-2 border-black">
             <tr>
@@ -68,22 +69,25 @@ const BackendList = ({list}: {list: BackendInfo[]}) => {
   )
 }
 
-const HatchButton = ({handleClick, handleLoad, load}) => {
+
+const HatchButton: React.FC = ({handleClick, handleLoad, load}: {handleClick: Function, handleLoad: Function, load: boolean}) => {
   const hatchService = (e) => {
     e.preventDefault()
     handleClick()
     handleLoad()
   }
   return (
-    <div className="flex flex-col m-auto mb-20 relative">
-        <p className="text-2xl text-red-800">Hatch a service</p>
-        <img className="h-16 w-16 red-500" src={arrow} />
+    <div className="flex flex-col m-auto mt-10 mb-10 relative">
+        <p className="font-josefin text-2xl text-red-800">Hatch a Service</p>
+        {/* <img className="h-16 w-16 red-500" src={arrow} /> */}
         <button
-          className="h-14 w-12 rounded-b-3xl border-2 border-green-500 rounded-t-3xl inset-0 bg-white bg-[radial-gradient(#ef4444_1px,transparent_4px)] [background-size:16px_16px]"
+          // className="h-14 w-12 rounded-b-3xl border-2 border-green-500 rounded-t-3xl inset-0 bg-white bg-[radial-gradient(#ef4444_1px,transparent_4px)] [background-size:16px_16px]"
+          className="bg-[#C5D0E3] h-20 w-20 rounded-full flex items-center justify-center animate-bounce"
           disabled={load}
           onClick={hatchService}
-        ></button>
-        
+        >
+          <img src={logoNoText} className="h-20 w-20 rounded-full hover:animate-spin-slow" />
+        </button>
     </div>
   )
 }
@@ -101,7 +105,7 @@ const Loading = ({loadingState}: {loadingState: boolean}) => {
   )
 }
 
-const Modal = () => {
+const Modal: React.FC = () => {
   return (
   <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
   <div className="bg-gray-300 p-8 rounded-lg shadow-lg text-center">
@@ -123,7 +127,7 @@ const Modal = () => {
   )
 }
 
- const BackendPage = () => {
+ const BackendPage: React.FC = () => {
   const user: string = '1';
   const service: string = useParams()['service'] || '';
   const [load, setLoad] = useState(false)
@@ -176,7 +180,7 @@ const Modal = () => {
     <>
      
       <div className="h-auto flex items-center justify-center bg-slate-800">
-      <p className='flex ml-auto text-white text-5xl align-center'>{serviceName}</p>
+      <p className='flex ml-auto font-josefin text-white text-5xl align-center'>{serviceName}</p>
         <HatchButton handleClick={getUrl} handleLoad={changeLoadState} load={load}  />
       </div>
       <div className={backendClass}>
