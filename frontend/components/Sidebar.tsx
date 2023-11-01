@@ -11,13 +11,13 @@ import {
   useParams,
 } from 'react-router-dom'
 
-const nonActive = "font-amatica flex items-center p-4 cursor-pointer transform hover:bg-[#C5D0E3] duration-200 ease-in-out rounded-2xl"
+const nonActive = "font-amatic text-2xl flex items-center p-4 cursor-pointer transform hover:bg-[#C5D0E3] duration-200 ease-in-out rounded-2xl"
 const active = "flex items-center p-4 cursor-pointer bg-[#C5D0E3] rounded-2xl"
 
 const SideBarLink = ({ path, image, text }) => {
   
   return (
-    <div className={twMerge(nonActive, location.pathname === `/${path}` ? active : '')}>
+    <div className={twMerge(nonActive, location.pathname.includes(`${path}`) ? active : '')}>
       <img src={image} className="h-5 w-5 transform hover:scale-105" />
       <span className="ml-3 ">{text}</span>
   </div>
@@ -50,7 +50,7 @@ const Sidebar = () => {
         <div className="mt-auto flex items-center p-4 cursor-pointer 
         transform hover:bg-[#C5D0E3] rounded-2xl">
           <img src={logout} className="h-4 w-4 transform hover:scale-105"/>
-          <span className="ml-3 transform hover:underline">Logout</span>
+          <span className="ml-3 font-amatic text-2xl transform hover:underline">Logout</span>
         </div>
       </div>
 

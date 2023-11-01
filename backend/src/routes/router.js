@@ -4,10 +4,10 @@ import axios from 'axios'
 
 const router = express.Router()
 const pgp = pgPromise();
-const gcn = 'postgres://zacharykerner:mayfly@localhost:5432/mayfly_global'
-const ucn = 'postgres://zacharykerner:mayfly@localhost:5432/mayfly_user'
+const gcn = 'postgres://mayfly:mayfly@localhost:5432/mayfly'
+// const ucn = 'postgres://mayfly:mayfly@localhost:5432/mayfly_user'
 const gdb = pgp(gcn);
-const udb = pgp(ucn);
+// const udb = pgp(ucn);
 
 //opportunity for caching
 router.get('/:user/servicesUser', (req, res) => {
@@ -86,14 +86,14 @@ router.get('/:user/services/:service/hatch', (req, res) => {
     "jupyter-notebook": 'ghcr.io/drifting-in-space/jamsocket-jupyter-notebook:sha-fa92787'
   }
   
-  const planeIP = '54.144.171.127'
+  const planeIP = '34.237.126.241'
   const port = '3001'
   const image = serviceToImage[req.params.service]
   const userId = Number(req.params.user);
   const serviceName = req.params.service
 
-  // const address = `http://${planeIP}:${port}/?image=${image}`
-  const address = 'http://localhost:3000/testPlane'
+  const address = `http://${planeIP}:${port}/?image=${image}`
+  // const address = 'http://localhost:3000/testPlane'
 
   axios.get(address)
     .then((response) => {
