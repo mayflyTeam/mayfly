@@ -21,7 +21,7 @@ router.get('/:user/servicesUser', (req, res) => {
     })
 })
 
-router.get("/:user/servicesGlobal", (req, res) => {
+router.get("/:user/services", (req, res) => {
   const userId = req.params.user;
   gdb.many('SELECT id, name FROM services WHERE user_id = $1', userId)
     .then(services => {
@@ -53,7 +53,7 @@ router.get("/:user/servicesUser/:service", (req, res) => {
   
 });
 
-router.get('/:user/servicesGlobal/:service', (req, res) => {
+router.get('/:user/services/:service', (req, res) => {
   const user = req.params.user;
   const service = req.params.service;
   gdb.one('SELECT id FROM services WHERE name = $1', [service])
@@ -92,20 +92,19 @@ router.get('/:user/services/:service/hatch', (req, res) => {
   const userId = Number(req.params.user);
   const serviceName = req.params.service
 
-  const address = `http://${planeIP}:${port}/?image=${image}`
-  console.log("address", address)
+  // const address = `http://${planeIP}:${port}/?image=${image}`
+  const address = 'http://localhost:3000/testPlane'
 
   axios.get(address)
     .then((response) => {
       const data = response.data
-      console.log('data', data)
       gdb.one('SELECT id FROM services WHERE name = $1', [serviceName])
         .then(serviceResponse => {
           const service_id = Number(serviceResponse.id)
-          const success = response.data.error === null ? true : false;
-          const url = response.data.url === null ? "launch failure" :  response.data.url;
-          const data = {url: url, launchSuccess: success, service_id: service_id, error: response.data.error};
-          //console.log('url', url, 'launch_succes', success, 'service_id', service_id)
+          const success = data.error === null ? true : false;
+          const url = data.url === null ? "launch failure" :  data.url;
+          const info = {url: url, launchSuccess: success, service_id: service_id, error: data.error};
+          console.log('url', url, 'launch_success', success, 'service_id', service_id)
           gdb.one("INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) RETURNING *", [url, success, service_id])
             .then(newBackend => {
               console.log("userId", userId, "newBackend", newBackend)
@@ -130,7 +129,7 @@ router.get('/:user/services/:service/hatch', (req, res) => {
 
 router.get("/testPlane", (req, res) => {
   const roll = Math.random()
-  const url =Math.floor(Math.random() * 1000)
+  const url = Math.floor(Math.random() * 1000)
   setTimeout(() => {
     if (roll < .5) {
       res.json({url: `www.workingBackend.com/${url}`, error: null})
@@ -150,7 +149,7 @@ router.get("/testPlane", (req, res) => {
 // const table = 'backends';
 // pgp.helpers.insert(data, columns, table);
 
-router.get("/testNametoIdGlobal", (req, res) => {
+router.get("/testNametoId", (req, res) => {
   gdb.one('SELECT id FROM services WHERE name = $1', ["drop4"])
   .then(response => console.log(response))
 })
@@ -163,5 +162,25 @@ router.get("/testInsertInto", (req, res) => {
   .catch(e => console.log('insert error'))
 })
 
+router.post("/addService", (req, res) => {
+  //security
+  //post route with json object
+  //req.name - string; req.image - string
+  //sent as a post to Nate
+  const data = req.data
 
+  axios.post("/testAddService", data)
+    .then(response => {
+
+      res.send(response.status)
+    })
+    .catch(error => {
+      console.log('nate add service error')
+    })
+})
+
+
+router.post('testAddService', (req, res) => {
+
+})
 export default router

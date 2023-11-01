@@ -15,6 +15,30 @@ article {
 
 }
 
+.yoshi-egg-button {
+  background: #72a42b; /* Green color similar to Yoshi egg */
+  border: none;
+  border-radius: 50%; /* Make it a circle */
+  width: 120px;
+  height: 150px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+}
+
+.yoshi-egg-button:before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  background: #ffffff; /* White */
+  bottom: 0;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
 .backendTable {
   margin: 20px;
 }

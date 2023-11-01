@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Amatic SC', sans-serif, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
+  /* color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #242424; */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -34,6 +39,30 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+.yoshi-egg-button {
+  background: #72a42b; /* Green color similar to Yoshi egg */
+  border: none;
+  border-radius: 50%; /* Make it a circle */
+  width: 120px;
+  height: 150px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+}
+
+.yoshi-egg-button:before {
+  content: '';
+  position: absolute;
+  width: 120px;
+  height: 60px;
+  background: #ffffff; /* White */
+  bottom: 0;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
 }
 
 button {

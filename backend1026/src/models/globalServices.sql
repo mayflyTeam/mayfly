@@ -38,13 +38,13 @@ VALUES
 
 INSERT INTO backends (url, launch_success, created_at, service_id)
 VALUES
-('url.1.com', true, now(), 1),
-('url.2.com', true, now(), 1),
-('url.3.com', true, now(), 1),
-('url.4.com', true, now(), 2),
-('url.5.com', true, now(), 2),
+('http://f7643bec-47cd-4926-be2d-7203d4928716.taishan.website:8080/', true, now(), 1),
+('http://f7643bec-47cd-4927-be2d-7203d4928716.taishan.website:8080/', true, now(), 1),
+('http://f7643bec-47cd-4928-be2d-7203d4928716.taishan.website:8080/', true, now(), 1),
+('http://f7643bec-47cd-4929-be2d-7203d4928716.taishan.website:8080/', true, now(), 2),
+('http://f7643bec-47cd-4925-be2d-7203d4928716.taishan.website:8080/', true, now(), 2),
 ('', false, now(), 3),
-('url.6.com', true, now(), 3);
+('http://f7643bec-47cd-49210-be2d-7203d4928716.taishan.website:8080/', true, now(), 3);
 
 INSERT INTO users_backends (user_id, backend_id)
 VALUES (1,1), (1,2), (1,3), (1,4), (1,5), (1,6), (1,7); 
