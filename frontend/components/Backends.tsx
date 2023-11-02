@@ -176,7 +176,7 @@ const Modal = () => {
   }
   const backendFull: string = "flex items-center bg-slate-800 h-full"
   const backendScreen: string = "flex items-center bg-slate-800 h-screen"
-  const backendClass: string = backends.length > 6 ? backendFull : backendScreen
+  const backendClass: string = backends.length >10 ? backendFull : backendScreen
   
 
   return (

@@ -1,7 +1,14 @@
 import express, { Request, Response } from 'express'
 import pgPromise from 'pg-promise'
 import axios from 'axios'
-import { Interface } from 'readline';
+
+import { 
+  getAllServicesByUser, 
+  getServiceId, 
+  getConvertedBackends,
+  insertIntoBackend,
+  insertIntoUserBackends
+ } from '../services/mayflyServices'
 
 const router = express.Router()
 const pgp = pgPromise();
@@ -29,39 +36,29 @@ interface HatchResponse {
 //opportunity for caching
 
 router.get("/:user/services", 
-  (req: Request<{user: string}>, res: Response<Array<{id: number, name: string}>>) => {
-    const userId: string = req.params.user;
-    db.many<Service>('SELECT id, name FROM services WHERE user_id = $1', userId)
-      .then(services => {
-        res.send(services)
+  (req: Request<{user: string}>, res: Response<Array<Service>>) => {
+    const userId: number = Number(req.params.user);
+    getAllServicesByUser(userId)
+      .then((services: Service[]) => {
+        res.send(services);
       })
-      .catch(error => {
-        console.log(error);
-      });
 });
 
 router.get('/:user/services/:service', 
-  (req: Request<{user: string, service: string}>, res: Response<Array<{url: string, launchSuccess: boolean, hatchedAt: Date, squishedAt: Date}>>) => {
+  (req: Request<{user: string, service: string}>, res: Response<Array<{url: string, launchSuccess: boolean, hatchedAt: Date, squishedAt: Date}> | string>) => {
     const user = req.params.user;
     const service = req.params.service;
-    db.one<Service>('SELECT id FROM services WHERE name = $1', [service])
-      .then (response => {
-        db.many<Backend>('SELECT url, launch_success, created_at, terminated_at FROM backends AS b JOIN users_backends AS ub ON b.id = ub.backend_id WHERE ub.user_id = $1 AND b.service_id = $2 ORDER BY b.created_at DESC', [user, response.id])
-        .then(backends => {
-          const convertedBackends = backends.map(backend => {
-            return {
-              url: backend.url,
-              launchSuccess: backend.launch_success,
-              hatchedAt: backend.created_at,
-              squishedAt: backend.terminated_at
-            }
-          });
-
-          res.send(convertedBackends);
-          })
-        .catch(error => console.log('Error on 2nd call', error))
+    getServiceId(service)
+      .then(serviceId => {
+        return getConvertedBackends(user, serviceId);
       })
-      .catch(error => console.log('Error on 1st call', error));
+      .then(convertedBackends => {
+        res.send(convertedBackends);
+      })
+      .catch(error => {
+        console.log('Error:', error);
+        res.status(500).send('Internal server error');
+      });
 });
 
 router.get('/:user/services/:service/hatch', (req: Request, res: Response) => {
@@ -86,17 +83,13 @@ router.get('/:user/services/:service/hatch', (req: Request, res: Response) => {
   axios.get<HatchResponse>(address)
     .then((response) => {
       const data = response.data
-      db.one<Service>('SELECT id FROM services WHERE name = $1', [serviceName])
-        .then(serviceResponse => {
-          const service_id: number = Number(serviceResponse.id)
+      getServiceId(serviceName)
+        .then(serviceId => {
           const success: boolean = data.error === null ? true : false;
-          const url:string = data.url === null ? "launch failure" :  data.url;
-          const info: Object = {url: url, launchSuccess: success, service_id: service_id, error: data.error};
-          console.log('url', url, 'launch_success', success, 'service_id', service_id)
-          db.one<Backend>("INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) RETURNING *", [url, success, service_id])
+          insertIntoBackend(data.url, success, serviceId)
             .then(newBackend => {
               console.log("userId", userId, "newBackend", newBackend)
-              db.none('INSERT INTO users_backends (user_id, backend_id) VALUES ($1, $2)', [userId, newBackend.id])
+              insertIntoUserBackends(userId, newBackend.id)
                 .then(result => console.log(result))
                 .catch(e => console.log("noneError", e));
             })
