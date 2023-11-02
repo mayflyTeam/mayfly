@@ -3,10 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
 const express_1 = __importDefault(require("express"));
 const pg_promise_1 = __importDefault(require("pg-promise"));
 const axios_1 = __importDefault(require("axios"));
 const router = express_1.default.Router();
+exports.router = router;
 const pgp = (0, pg_promise_1.default)();
 const cn = 'postgres://mayfly:mayfly@localhost:5432/mayfly';
 const db = pgp(cn);
@@ -56,7 +58,7 @@ router.get('/:user/services/:service/hatch', (req, res) => {
     const userId = Number(req.params.user);
     const serviceName = req.params.service;
     const address = `http://${planeIP}:${port}/?image=${image}`;
-    // const address = 'http://localhost:3000/testPlane'
+    // const address: string = 'http://localhost:3000/testPlane'
     axios_1.default.get(address)
         .then((response) => {
         const data = response.data;
@@ -101,18 +103,12 @@ router.get("/testNametoId", (req, res) => {
     db.one('SELECT id FROM services WHERE name = $1', ["drop4"])
         .then(response => console.log(response));
 });
-router.get("/testInsertInto", (req, res) => {
-    const url = "www.www.com";
-    const launch_success = db.none("INSERT INTO services (url, launch_success, created_at, service_id) VALUES ($1, $2, $3)", [url, launch_success, date, service_id])
-        .then(r => console.log("insert success"))
-        .catch(e => console.log('insert error'));
-});
 router.post("/addService", (req, res) => {
     //security
     //post route with json object
     //req.name - string; req.image - string
     //sent as a post to Nate
-    const data = req.data;
+    const data = req.body;
     axios_1.default.post("/testAddService", data)
         .then(response => {
         res.send(response.status);
@@ -123,4 +119,3 @@ router.post("/addService", (req, res) => {
 });
 router.post('testAddService', (req, res) => {
 });
-exports.default = router;

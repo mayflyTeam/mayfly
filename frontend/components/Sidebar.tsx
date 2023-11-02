@@ -6,10 +6,16 @@ import document from "../src/assets/document.png"
 import { twMerge } from 'tailwind-merge'
 import { Link, useLocation } from 'react-router-dom'
 
-const nonActive = "font-amatic text-2xl flex items-center p-4 cursor-pointer transform hover:bg-[#C5D0E3] duration-200 ease-in-out rounded-2xl"
-const active = "flex items-center p-4 cursor-pointer bg-[#C5D0E3] rounded-2xl"
+const nonActive: string = "font-amatic text-2xl flex items-center p-4 cursor-pointer transform hover:bg-[#C5D0E3] duration-200 ease-in-out rounded-2xl"
+const active: string = "flex items-center p-4 cursor-pointer bg-[#C5D0E3] rounded-2xl"
 
-const SideBarLink = ({ path, image, text }: { path: string, image: string, text: string }) => {
+interface SideBarLinkProps {
+  path: string,
+  image: string,
+  text: string
+}
+
+const SideBarLink = ({ path, image, text }: SideBarLinkProps) => {
   
   return (
     <div className={twMerge(nonActive, location.pathname.includes(`${path}`) ? active : '')}>
@@ -20,7 +26,6 @@ const SideBarLink = ({ path, image, text }: { path: string, image: string, text:
 }
 
 const Sidebar = () => {
-
   const location = useLocation()
   if (location.pathname === "/" || location.pathname === "/home") {
     return null

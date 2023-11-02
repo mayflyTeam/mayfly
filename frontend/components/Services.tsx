@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
@@ -9,9 +9,9 @@ interface ServiceObject {
 }
 
 const Service = ({service}: {service: ServiceObject}) => {
-  const serviceName: string = service.name
+  const { name } = service;
   return (
-    <Link to={`/services/${serviceName}`}>
+    <Link to={`/services/${name}`}>
       <li className="p-8 border-2 font-josefin text-2xl border-black m-2 bg-white rounded-xl  shadow-2xl transform hover:bg-[#C5D0E3] duration-300 ease-in-out">
         {service.name}
       </li>
@@ -21,7 +21,7 @@ const Service = ({service}: {service: ServiceObject}) => {
 
 const ServiceList = ({services}: {services: ServiceObject[]}) => {
   
-  const list = services.map(service => <Service key={uuidv4()} service={service} />)
+  const list: ReactNode[] = services.map(service => <Service key={uuidv4()} service={service} />)
   return (
     <ul className="m-5">
       {list}
@@ -30,11 +30,10 @@ const ServiceList = ({services}: {services: ServiceObject[]}) => {
 }
 
 const TableCard = () => {
-
   const [services, setServices] = useState<Array<ServiceObject>>([]);
 
   useEffect(() => {
-    const userId = 1;
+    const userId: number = 1;
 
     const getServices = async () => {
       const { data } = await axios.get(`http://localhost:3000/${userId}/services`)

@@ -1,4 +1,4 @@
-import { useState, useEffect, MouseEvent } from 'react'
+import { useState, useEffect, ReactNode, ReactElement, MouseEvent } from 'react'
 import logoNoText from "../src/assets/transparentLogoNoText.png"
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
@@ -11,14 +11,19 @@ interface BackendInfo {
 }
 
 const convertDate = (date: string): string => {
-  const utcDate = new Date(date);
-  const localDate = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
-  const localDateString = localDate.toLocaleString();
+  const utcDate: Date = new Date(date);
+  const localDate: Date = new Date(utcDate.getTime() + utcDate.getTimezoneOffset() * 60000);
+  const localDateString: string = localDate.toLocaleString();
   return localDateString.replace(",", "")
 }
 
-const BackendTableRow = ({backend, idx}: {backend: BackendInfo, idx: number}) => {
-  const buttonNotPresent = backend.squishedAt ? convertDate(backend.squishedAt) : <SquishButton />
+interface BackendTableRowProps {
+  backend: BackendInfo,
+  idx: number
+}
+
+const BackendTableRow = ({backend, idx}: BackendTableRowProps) => {
+  const buttonNotPresent: string | ReactElement = backend.squishedAt ? convertDate(backend.squishedAt) : <SquishButton />
   const launchText: string = String(backend.launchSuccess) === "true" ? "success" : "Loading..."
   return (
     <tr className="text-sm">
@@ -37,7 +42,7 @@ const BackendList = ({list}: {list: BackendInfo[]}) => {
 
   //add slow loading network
   
-  const rows = list.map((backend, idx) => {
+  const rows: ReactNode[] = list.map((backend, idx) => {
     return <BackendTableRow backend={backend} key={backend.url} idx={list.length - idx} />
 })
   
@@ -63,8 +68,13 @@ const BackendList = ({list}: {list: BackendInfo[]}) => {
   )
 }
 
+interface HatchButtonProps {
+  handleClick: () => void;
+  handleLoad: () => void;
+  load: boolean;
+}
 
-const HatchButton = ({handleClick, handleLoad, load}: {handleClick: Function, handleLoad: Function, load: boolean}) => {
+const HatchButton = ({handleClick, handleLoad, load}: HatchButtonProps) => {
   const hatchService: React.MouseEventHandler<HTMLButtonElement> = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     handleClick()
@@ -93,7 +103,7 @@ const SquishButton = () => {
 }
 
 const Loading = ({loadingState}: {loadingState: boolean}) => {
-  const display = loadingState ? <Modal /> : null
+  const display: ReactElement | null = loadingState ? <Modal /> : null
   return (
     <div className="loadingText">{display}</div>
   )
@@ -124,7 +134,7 @@ const Modal = () => {
  const BackendPage = () => {
   const user: string = '1';
   const service: string = useParams()['service'] || '';
-  const [loading, isLoading] = useState(false)
+  const [loading, isLoading] = useState<boolean>(false)
 
   const changeLoadState = () => {
     isLoading(true)
@@ -164,9 +174,9 @@ const Modal = () => {
       console.log('hatch call from frontend fail')
     })
   }
-  const backendFull = "flex items-center bg-slate-800 h-full"
-  const backendScreen = "flex items-center bg-slate-800 h-screen"
-  const backendClass = backends.length > 6 ? backendFull : backendScreen
+  const backendFull: string = "flex items-center bg-slate-800 h-full"
+  const backendScreen: string = "flex items-center bg-slate-800 h-screen"
+  const backendClass: string = backends.length > 6 ? backendFull : backendScreen
   
 
   return (

@@ -10,6 +10,12 @@ export default {
       fontFamily: {
         'amatic': ['Amatic SC, sans-serif'],
         'josefin': ['Josefin Sans, sans-serif'],
+        'dm-sans': ['DM Sans, sans-serif'],
+        'manrope': ['Manrope, sans-serif'],
+        'prompt': ['Prompt, sans-serif'],
+        'public-sans': ['Public Sans, sans-serif'],
+        'righteous': ['Righteous, sans-serif'],
+        'space-grotesk': ['Space Grotesk, sans-serif'],
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
