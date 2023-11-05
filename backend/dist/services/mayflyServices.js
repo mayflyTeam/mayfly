@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.insertIntoUserBackends = exports.insertIntoBackend = exports.getConvertedBackends = exports.getServiceId = exports.getAllServicesByUser = void 0;
+exports.insertIntoUserBackends = exports.insertIntoBackends = exports.insertIntoServices = exports.getConvertedBackends = exports.getServiceId = exports.getAllServicesByUser = void 0;
 const pg_promise_1 = __importDefault(require("pg-promise"));
 const pgp = (0, pg_promise_1.default)();
 const cn = 'postgres://mayfly:mayfly@localhost:5432/mayfly';
@@ -46,12 +46,17 @@ const getConvertedBackends = (user, serviceId) => __awaiter(void 0, void 0, void
     return convertedBackends;
 });
 exports.getConvertedBackends = getConvertedBackends;
-const insertIntoBackend = (url, success, serviceId) => __awaiter(void 0, void 0, void 0, function* () {
+const insertIntoServices = (serviceName, image, userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield db.none(`INSERT INTO services (name, image, user_id) VALUES ($1, $2, $3)`, [serviceName, image, userId]);
+    return response;
+});
+exports.insertIntoServices = insertIntoServices;
+const insertIntoBackends = (url, success, serviceId) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield db.one(`INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) 
                                          RETURNING *`, [url, success, serviceId]);
     return response;
 });
-exports.insertIntoBackend = insertIntoBackend;
+exports.insertIntoBackends = insertIntoBackends;
 const insertIntoUserBackends = (userId, backendId) => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield db.none('INSERT INTO users_backends (user_id, backend_id) VALUES ($1, $2)', [userId, backendId]);
     return response;

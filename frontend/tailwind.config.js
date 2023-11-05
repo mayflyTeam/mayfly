@@ -22,6 +22,9 @@ export default {
       },
       height: {
         '300': '300px'
+      },
+      width: {
+        '800': '800px'
       }
     },
   },

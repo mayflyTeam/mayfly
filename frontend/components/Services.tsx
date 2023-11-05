@@ -11,7 +11,7 @@ interface ServiceObject {
 const Service = ({service}: {service: ServiceObject}) => {
   const { name } = service;
   return (
-    <Link to={`/services/${name}`}>
+    <Link to={`/dash/services/${name}`}>
       <li className="p-8 border-2 font-josefin text-2xl border-black m-2 bg-white rounded-xl  shadow-2xl transform hover:bg-[#C5D0E3] duration-300 ease-in-out">
         {service.name}
       </li>
@@ -44,7 +44,7 @@ const TableCard = () => {
   }, [])
 
   return (
-    <div className="flex-container object-fit justify-center items-center rounded-xl mt-60 w-screen mr-20 ml-60 shadow-3xl">
+    <div className="flex-container object-fit justify-center ml-60 mt-40 mr-20 items-center rounded-xl w-800 shadow-3xl">
       <ServiceList services={services}/>
     </div>
   )

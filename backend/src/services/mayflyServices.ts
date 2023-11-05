@@ -59,7 +59,12 @@ export const getConvertedBackends = async (user: string, serviceId: number): Pro
   return convertedBackends;
 }
 
-export const insertIntoBackend = async (url: string | null, success: boolean, serviceId: number) => {
+export const insertIntoServices = async (serviceName: string, image: string, userId: number) => {
+  const response = await db.none(`INSERT INTO services (name, image, user_id) VALUES ($1, $2, $3)`, [serviceName, image, userId])
+  return response;
+}
+
+export const insertIntoBackends = async (url: string | null, success: boolean, serviceId: number) => {
   const response = await db.one<Backend>(`INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) 
                                          RETURNING *`, [url, success, serviceId])
   return response;

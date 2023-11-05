@@ -27,29 +27,31 @@ const SideBarLink = ({ path, image, text }: SideBarLinkProps) => {
 
 const Sidebar = () => {
   const location = useLocation()
-  if (location.pathname === "/" || location.pathname === "/home") {
+  if (location.pathname === "/" || location.pathname === "/home" || location.pathname.includes('/demo')) {
     return null
   }
 
   return (
     <div className="fixed left-0 top-0 h-screen bg-white text-red-1000
        flex flex-col border-r-4 border-[#C5D0E3] w-52">
-        <div className="m-3 font-prompt text-red-900 text-sm">
-          <a><img src={logo} className="h-12 w-12 cursor-pointer transform hover:scale-105"/></a>
-          <span>Mayfly</span>
-        </div>
+        <Link to="/home">
+          <div className="m-3 font-prompt text-red-900 text-sm">
+            <img src={logo} className="h-12 w-12 cursor-pointer transform hover:scale-105"/>
+            <span className="cursor-pointer">Mayfly</span>
+          </div>
+        </Link>
         <div className="py-4">
           <Link to="/home">
           <SideBarLink path='home' image={home} text="Home"/>
           </Link>
-          <Link to="/services">
+          <Link to="/dashboard">
+            <SideBarLink path='/dashboard' image={computer} text="Dashboard"/>
+          </Link>
+          <Link to="/dash/services">
             <SideBarLink path='services' image={computer} text="Services"/>
           </Link>
-          <Link to="/addService">
+          <Link to="/dash/addService">
             <SideBarLink path='addService' image={computer} text="Add Service" />
-          </Link>
-          <Link to="/logs">
-            <SideBarLink path='logs' image={document} text="Logs" />
           </Link>
         </div>
         <div className="mt-auto flex items-center p-4 cursor-pointer 
