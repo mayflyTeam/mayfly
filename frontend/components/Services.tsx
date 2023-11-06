@@ -1,10 +1,5 @@
-import Sidebar from './Sidebar'
-import { useState, useEffect} from 'react'
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link,
-  useParams
-} from 'react-router-dom'
+import { useState, useEffect, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -13,10 +8,10 @@ interface ServiceObject {
   name: string
 }
 
-const Service: React.FC = ({service}: {service: ServiceObject}) => {
-  const serviceName: string = service.name
+const Service = ({service}: {service: ServiceObject}) => {
+  const { name } = service;
   return (
-    <Link to={`/services/${serviceName}`}>
+    <Link to={`/dash/services/${name}`}>
       <li className="p-8 border-2 font-josefin text-2xl border-black m-2 bg-white rounded-xl  shadow-2xl transform hover:bg-[#C5D0E3] duration-300 ease-in-out">
         {service.name}
       </li>
@@ -24,9 +19,9 @@ const Service: React.FC = ({service}: {service: ServiceObject}) => {
   )
 }
 
-const ServiceList: React.FC = ({services}: {services: ServiceObject[]}) => {
+const ServiceList = ({services}: {services: ServiceObject[]}) => {
   
-  const list = services.map(service => <Service key={uuidv4()} service={service} />)
+  const list: ReactNode[] = services.map(service => <Service key={uuidv4()} service={service} />)
   return (
     <ul className="m-5">
       {list}
@@ -34,12 +29,11 @@ const ServiceList: React.FC = ({services}: {services: ServiceObject[]}) => {
   )
 }
 
-const TableCard: React.FC = () => {
-
+const TableCard = () => {
   const [services, setServices] = useState<Array<ServiceObject>>([]);
 
   useEffect(() => {
-    const userId = 1;
+    const userId: number = 1;
 
     const getServices = async () => {
       const { data } = await axios.get(`http://localhost:3000/${userId}/services`)
@@ -50,13 +44,13 @@ const TableCard: React.FC = () => {
   }, [])
 
   return (
-    <div className="flex-container object-fit justify-center items-center rounded-xl mt-60 w-screen mr-20 ml-60 shadow-3xl">
+    <div className="flex-container object-fit justify-center ml-60 mt-40 mr-20 items-center rounded-xl w-800 shadow-3xl">
       <ServiceList services={services}/>
     </div>
   )
 }
 
-const ServicesPage: React.FC = () => {
+const ServicesPage = () => {
   return (
     <div className="flex justify-center text-center bg-slate-800 h-screen">
       <TableCard />

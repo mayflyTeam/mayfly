@@ -1,25 +1,19 @@
-import {
-  BrowserRouter as Router,
-  Routes, Route, Link,
-  useParams
-} from 'react-router-dom'
-import ServicesPage from './Services'
-import BackendPage from './Backends'
-import AddServicePage from './AddService'
+import { useState, useEffect, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 
-import Sidebar from './Sidebar'
 
-function Dashboard() {
+const Dashboard = () => {
   return (
-      <div className="bg-slate-800 h-screen">
-        <Sidebar />
-          <Routes>
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/services/:service" element={<BackendPage />} />
-            <Route path="/addService" element={<AddServicePage />} />
-          </Routes>
+    <div className="flex justify-center text-center bg-slate-800 text-white h-screen">
+      <div>
+        <p className="mt-28 ml-28 text-3xl font-prompt">Welcome to your Mayfly Dashboard</p>
+        <p className="mt-16 ml-28 text-xl font-josefin">You have X number of servers uploaded</p>
       </div>
+    </div>
   )
 }
+
 
 export default Dashboard
