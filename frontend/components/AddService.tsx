@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react';
 import { Link } from 'react-router-dom'
+import * as DOMPurify from 'dompurify';
 
 const Form = () => {
   const [formData, setFormData] = useState({ serviceName: '', image: '', userId: 1 });
@@ -8,8 +9,15 @@ const Form = () => {
   const submitForm: React.FormEventHandler<HTMLFormElement> = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // make axios post call
+
+    const sanitizedData = {
+      serviceName: DOMPurify.sanitize(formData.serviceName),
+      image: DOMPurify.sanitize(formData.image),
+      //userId will come from local storage
+    } 
+
     try {
-      await axios.post('http://localhost:3000/addService', formData)
+      await axios.post('http://localhost:3000/addService', sanitizedData)
       location.pathname = '/services'
     } catch(e) {
       console.log(e);
@@ -18,7 +26,7 @@ const Form = () => {
   }
 
   const reset = () => {
-    setFormData({ serviceName: '', image: '' , userId: 1})
+    setFormData({ serviceName: '', image: '' , userId: 1}) //need to fix when doing users/auth
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +53,7 @@ const Form = () => {
           <Link to='/services'><button className="ml-6">Cancel</button></Link>
         </div>
       </form>
+      
     </div>
   )
 }

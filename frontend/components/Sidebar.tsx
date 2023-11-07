@@ -27,7 +27,7 @@ const SideBarLink = ({ path, image, text }: SideBarLinkProps) => {
 
 const Sidebar = () => {
   const location = useLocation()
-  if (location.pathname === "/" || location.pathname === "/home" || location.pathname.includes('/demo')) {
+  if (!location.pathname.includes("/dash")) {
     return null
   }
 
