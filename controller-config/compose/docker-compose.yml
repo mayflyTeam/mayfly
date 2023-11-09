@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  controller:
+    container_name: plane-controller
+    image: plane/controller:latest
+    build:
+      dockerfile: ./controller/Dockerfile
+      context: ../..
+    volumes:
+      - ../plane-config/controller.toml:/etc/plane/controller.toml:ro
+    command:
+      /etc/plane/controller.toml
+    networks:
+      plane:
+        ipv4_address: 172.16.238.11
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    depends_on:
+      - nats
+
+  nats:
+    container_name: plane-nats
+    image: nats:latest
+    command:
+      "--jetstream ${NATS_FLAGS:-}"
+    ports:
+      - "4222:4222"
+    networks:
+      - plane
+
+networks:
+  plane:
+    name: plane
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1

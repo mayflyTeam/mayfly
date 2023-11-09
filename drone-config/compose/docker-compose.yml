@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  drone:
+    container_name: plane-drone
+    image: plane/drone:latest
+    build:
+      dockerfile: ./drone/Dockerfile
+      context: ../..
+    volumes:
+      - ../plane-config/drone.toml:/etc/plane/drone.toml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      /etc/plane/drone.toml
+    ports:
+      - "8080:8080"
+    networks:
+      - plane
+    depends_on:
+      - ip-api
+
+  ip-api:
+    container_name: plane-ip-api
+    image: mounttai/mayfly:latest
+    networks:
+      - plane
+
+networks:
+  plane:
+    name: plane
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1
