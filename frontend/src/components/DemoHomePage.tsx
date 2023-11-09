@@ -1,4 +1,4 @@
-import logoNoText from "../src/assets/transparentLogoNoText.png"
+import logoNoText from "../assets/transparentLogoNoText.png"
 import NavUsers from './NavUsers'
 import { MouseEventHandler } from 'react'
 import axios from 'axios'

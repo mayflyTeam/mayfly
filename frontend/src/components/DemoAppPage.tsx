@@ -1,5 +1,5 @@
 import NavUsers from './NavUsers'
-import logoNoText from "../src/assets/transparentLogoNoText.png"
+import logoNoText from "../assets/transparentLogoNoText.png"
 
 const DemoAppPage = () => {
   const url = localStorage.getItem("url") || ''

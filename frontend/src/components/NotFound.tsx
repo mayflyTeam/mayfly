@@ -1,4 +1,4 @@
-import logoNoText from "../src/assets/transparentLogoNoText.png"
+import logoNoText from "../assets/transparentLogoNoText.png"
 
 import NavHome from './NavHome'
 

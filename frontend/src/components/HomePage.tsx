@@ -1,4 +1,4 @@
-import logoNoText from "../src/assets/transparentLogoNoText.png"
+import logoNoText from "../assets/transparentLogoNoText.png"
 
 import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -10,11 +10,11 @@ const AnimatedText = () => {
   const [currentWord, setCurrentWord] = useState<string>(words[0]);
 
   useEffect(() => {
-    const intervalId: number = setInterval(() => {
+    const intervalId: NodeJS.Timeout = setInterval(() => {
       const currentIndex = words.indexOf(currentWord);
       const nextIndex = (currentIndex + 1) % words.length;
       setCurrentWord(words[nextIndex]);
-    }, 1750);
+    }, 2000);
 
     return () => clearInterval(intervalId)
   }, [currentWord, words]);

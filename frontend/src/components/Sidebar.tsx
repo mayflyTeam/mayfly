@@ -1,8 +1,7 @@
-import logout from "../src/assets/logout.png"
-import logo from "../src/assets/transparentLogoNoText.png"
-import home from "../src/assets/home.png"
-import computer from "../src/assets/computer3.png"
-import document from "../src/assets/document.png"
+import logout from "../assets/logout.png"
+import logo from "../assets/transparentLogoNoText.png"
+import home from "../assets/home.png"
+import computer from "../assets/computer3.png"
 import { twMerge } from 'tailwind-merge'
 import { Link, useLocation } from 'react-router-dom'
 

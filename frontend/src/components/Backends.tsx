@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, ReactElement, MouseEvent } from 'react'
-import logoNoText from "../src/assets/transparentLogoNoText.png"
+import logoNoText from "../assets/transparentLogoNoText.png"
 import { useParams } from 'react-router-dom'
 import Modal from './Modal'
 import axios from 'axios'
