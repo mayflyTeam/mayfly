@@ -1,3 +1,4 @@
+import React from 'react'
 import logo from "../assets/transparentLogoNoText.png"
 import githubLogo from "../assets/githubLogo.png"
 

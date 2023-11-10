@@ -1,3 +1,5 @@
+import React from 'react'
+
 import logoNoText from "../assets/transparentLogoNoText.png"
 
 import { useEffect, useState, useMemo } from 'react'
@@ -7,8 +9,8 @@ import NavHome from './NavHome'
 
 const AnimatedText = () => {
   const words: string[] = useMemo(() => ['high compute', 'collaborative', 'stateful'], []);
-  const [currentWord, setCurrentWord] = useState<string>(words[0]);
-
+  const [currentWord, setCurrentWord] = useState(words[0]);
+  //was useState<string> removed <string> for jest
   useEffect(() => {
     const intervalId: NodeJS.Timeout = setInterval(() => {
       const currentIndex = words.indexOf(currentWord);
@@ -38,7 +40,7 @@ const MayflyTitle = () => {
     <div className="relative text-center text-red-900 text-center items-center mt-24">
     <img src={logoNoText} className="h-60 w-60 ml-auto mr-10 opacity-25 relative" />
     <img src={logoNoText} className="h-60 w-60 mr-auto ml-10  opacity-25 relative transform -scale-x-100" />
-    <p className="font-prompt absolute left-0 top-8 w-full text-8xl text-center">Mayfly</p>
+    <p data-testid="mayfly-title" className="font-prompt absolute left-0 top-8 w-full text-8xl text-center">Mayfly</p>
     <AnimatedText />
     <Link to="/demo/apps">
       <button className="absolute top-64 left-1/2 -translate-x-1/2 font-josefin text-2xl text-center px-10 py-5 bg-red-400 border-2 border-red-900 rounded-3xl shadow-2xl transform hover:bg-red-500 hover:text-white ease-in-out duration-300">

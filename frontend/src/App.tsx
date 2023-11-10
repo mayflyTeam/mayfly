@@ -13,27 +13,27 @@ import BackendPage from './components/Backends'
 
 import DemoHomePage from './components/DemoHomePage'
 import DemoAppPage from './components/DemoAppPage'
+import NavHome from './components/NavHome'
+
 
 
 const App = () => {
   return (
 
-    <Router>
-      <Sidebar />
-      <Routes>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dash/services" element={<ServicesPage />} />
-          <Route path="/dash/services/:service" element={<BackendPage />} />
-          <Route path="/dash/addService" element={<AddServicePage />} />
-          <Route path="/demo/apps" element={<DemoHomePage />} />
-          <Route path="demo/app/:app" element={<DemoAppPage />} />
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="*" element={<NotFound />} />
-          
-        </Routes>
-       
-    </Router>
+      <Router>
+        <Sidebar />
+        <Routes>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dash/services" element={<ServicesPage />} />
+            <Route path="/dash/services/:service" element={<BackendPage />} />
+            <Route path="/dash/addService" element={<AddServicePage />} />
+            <Route path="/demo/apps" element={<DemoHomePage />} />
+            <Route path="demo/app/:app" element={<DemoAppPage />} />
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+      </Router>
   )
 }
 
