@@ -47,18 +47,56 @@ const getConvertedBackends = (user, serviceId) => __awaiter(void 0, void 0, void
 });
 exports.getConvertedBackends = getConvertedBackends;
 const insertIntoServices = (serviceName, image, userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield db.none(`INSERT INTO services (name, image, user_id) VALUES ($1, $2, $3)`, [serviceName, image, userId]);
-    return response;
+    const query = 'INSERT INTO services (name, image, user_id) VALUES (${name}, ${image}, ${user_id})';
+    try {
+        yield db.none(query, {
+            name: serviceName,
+            image: image,
+            user_id: userId,
+        });
+        return 'Insertion successful';
+    }
+    catch (error) {
+        console.error('Error inserting into services:', error);
+        throw error;
+    }
 });
 exports.insertIntoServices = insertIntoServices;
 const insertIntoBackends = (url, success, serviceId) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield db.one(`INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) 
-                                         RETURNING *`, [url, success, serviceId]);
-    return response;
+    try {
+        const response = yield db.one(`INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) 
+       RETURNING *`, [url, success, serviceId]);
+        return response;
+    }
+    catch (error) {
+        // Handle the error, e.g., log it or throw a custom error.
+        console.error('Error inserting into backends:', error);
+        throw new Error('Failed to insert into backends');
+    }
 });
 exports.insertIntoBackends = insertIntoBackends;
 const insertIntoUserBackends = (userId, backendId) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield db.none('INSERT INTO users_backends (user_id, backend_id) VALUES ($1, $2)', [userId, backendId]);
-    return response;
+    try {
+        const response = yield db.none('INSERT INTO users_backends (user_id, backend_id) VALUES ($1, $2)', [userId, backendId]);
+        return response;
+    }
+    catch (error) {
+        // Handle the error, e.g., log it or throw a custom error.
+        console.error('Error inserting into user backends:', error);
+        throw new Error('Failed to insert into user backends');
+    }
 });
 exports.insertIntoUserBackends = insertIntoUserBackends;
+// export const insertIntoServices = async (serviceName: string, image: string, userId: number) => {
+//   const response = await db.none(`INSERT INTO services (name, image, user_id) VALUES ($1, $2, $3)`, [serviceName, image, userId])
+//   return response;
+// }
+// export const insertIntoBackends = async (url: string | null, success: boolean, serviceId: number) => {
+//   const response = await db.one<Backend>(`INSERT INTO backends (url, launch_success, service_id) VALUES ($1, $2, $3) 
+//                                          RETURNING *`, [url, success, serviceId])
+//   return response;
+// }
+// export const insertIntoUserBackends = async (userId: number, backendId: number) => {
+//   const response = await db.none('INSERT INTO users_backends (user_id, backend_id) VALUES ($1, $2)', [userId, backendId])
+//   return response;
+// }

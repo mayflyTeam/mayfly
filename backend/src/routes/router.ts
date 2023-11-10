@@ -10,6 +10,7 @@ import {
   insertIntoBackends,
   insertIntoUserBackends
  } from '../services/mayflyServices'
+import { spawn, squish } from '../services/nats-commands'
 
 const router = express.Router();
 router.use(express.json());
@@ -75,51 +76,28 @@ router.get('/:user/services/:service',
       });
 });
 
-router.get('/:user/services/:service/hatch', (req: Request, res: Response) => {
-  //1 send a hatch request to Nate's EC2
-  //2 update the database
-  //cache the name = service_id relationship, user; cache in session
-
+router.get('/:user/services/:service/hatch', async (req: Request, res: Response) => {
+  console.log('whats up')
   const serviceToImage: Record<string, string> = {
     "drop4": "ghcr.io/drifting-in-space/demo-image-drop-four:latest",
     "jupyter-notebook": 'ghcr.io/drifting-in-space/jamsocket-jupyter-notebook:sha-fa92787',
     "whiteboard": 'rofl256/whiteboard'
   }
-  
-  const planeIP: string = 'mayfly.website'
-  const port: string = '3001'
-  const image:string = serviceToImage[req.params.service]
-  const userId: number = Number(req.params.user);
   const serviceName: string = req.params.service
+  const userId: number = Number(req.params.user);
+  const image: string = serviceToImage[serviceName]
 
-  const address: string = `http://${planeIP}:${port}/?image=${image}`
-  // const address: string = 'http://localhost:3000/testPlane'
-  console.log('address:', address)
+  const data: HatchResponse = await spawn(image)
 
-  axios.get<HatchResponse>(address)
-    .then((response) => {
-      const data = response.data
-      getServiceId(serviceName)
-        .then(serviceId => {
-          const success: boolean = data.error === null ? true : false;
-          insertIntoBackends(data.url, success, serviceId)
-            .then(newBackend => {
-              insertIntoUserBackends(userId, newBackend.id)
-                .then(result => console.log(result))
-                .catch(e => console.log("insert into join table error", e));
-            })
-            .catch(err => console.log('insert backend error:', err));
-      
-          res.json(data);
-        })
-        .catch(e => {
-          console.log("query name to id error")
-        })
-
-    })
-    .catch(error => {
-      console.log(error);
-    })
+  try {
+    const serviceId: number = await getServiceId(serviceName)
+    const newBackend: Backend = await insertIntoBackends(data.url, true, serviceId)
+    console.log(await insertIntoUserBackends(userId, newBackend.id))
+    res.json(data)
+  } catch(e) {
+    console.error("An error occurred:", e);
+    res.status(500).send("An error occurred while processing your request.");
+  }
 })
 
 
@@ -138,7 +116,6 @@ router.get("/testNametoId", (req: Request, res: Response) => {
   db.one<Service>('SELECT id FROM services WHERE name = $1', ["drop4"])
   .then(response => console.log(response))
 })
-
 
 
 router.get("/testDemoLaunch/:name", async (req: Request, res: Response) => {

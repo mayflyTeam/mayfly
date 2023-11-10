@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const pg_promise_1 = __importDefault(require("pg-promise"));
 const axios_1 = __importDefault(require("axios"));
 const mayflyServices_1 = require("../services/mayflyServices");
+const nats_commands_1 = require("../services/nats-commands");
 const router = express_1.default.Router();
 exports.router = router;
 router.use(express_1.default.json());
@@ -58,46 +59,28 @@ router.get('/:user/services/:service', (req, res) => {
         res.status(500).send('Internal server error');
     });
 });
-router.get('/:user/services/:service/hatch', (req, res) => {
-    //1 send a hatch request to Nate's EC2
-    //2 update the database
-    //cache the name = service_id relationship, user; cache in session
+router.get('/:user/services/:service/hatch', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('hello world');
     const serviceToImage = {
         "drop4": "ghcr.io/drifting-in-space/demo-image-drop-four:latest",
         "jupyter-notebook": 'ghcr.io/drifting-in-space/jamsocket-jupyter-notebook:sha-fa92787',
         "whiteboard": 'rofl256/whiteboard'
     };
-    const planeIP = 'mayfly.website';
-    const port = '3001';
-    const image = serviceToImage[req.params.service];
-    const userId = Number(req.params.user);
     const serviceName = req.params.service;
-    const address = `http://${planeIP}:${port}/?image=${image}`;
-    // const address: string = 'http://localhost:3000/testPlane'
-    console.log('address:', address);
-    axios_1.default.get(address)
-        .then((response) => {
-        const data = response.data;
-        (0, mayflyServices_1.getServiceId)(serviceName)
-            .then(serviceId => {
-            const success = data.error === null ? true : false;
-            (0, mayflyServices_1.insertIntoBackends)(data.url, success, serviceId)
-                .then(newBackend => {
-                (0, mayflyServices_1.insertIntoUserBackends)(userId, newBackend.id)
-                    .then(result => console.log(result))
-                    .catch(e => console.log("insert into join table error", e));
-            })
-                .catch(err => console.log('insert backend error:', err));
-            res.json(data);
-        })
-            .catch(e => {
-            console.log("query name to id error");
-        });
-    })
-        .catch(error => {
-        console.log(error);
-    });
-});
+    const userId = Number(req.params.user);
+    const image = serviceToImage[serviceName];
+    const data = yield (0, nats_commands_1.spawn)(image);
+    try {
+        const serviceId = yield (0, mayflyServices_1.getServiceId)(serviceName);
+        const newBackend = yield (0, mayflyServices_1.insertIntoBackends)(data.url, true, serviceId);
+        console.log(yield (0, mayflyServices_1.insertIntoUserBackends)(userId, newBackend.id));
+        res.json(data);
+    }
+    catch (e) {
+        console.error("An error occurred:", e);
+        res.status(500).send("An error occurred while processing your request.");
+    }
+}));
 router.get("/testUrl", (req, res) => {
     const roll = Math.random();
     //const url: number = Math.floor(Math.random() * 1000)

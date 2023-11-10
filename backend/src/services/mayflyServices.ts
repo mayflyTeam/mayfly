@@ -1,6 +1,6 @@
 import pgPromise from 'pg-promise'
 const pgp = pgPromise();
-const cn = 'postgres://zachkerner:mayfly@localhost:5432/mayfly'
+const cn = 'postgres://mayfly:mayfly@localhost:5432/mayfly'
 const db = pgp(cn);
 
 interface Service {
